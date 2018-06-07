@@ -86,6 +86,7 @@ class SEOEditorMetaTitleColumn extends GridFieldDataColumns implements
         $field->setName($this->getFieldName($field->getName(), $gridField, $record));
         $field->setValue($value);
         $field->setAttribute('data-name', 'MetaTitle');
+        $field->setAttribute('placeholder', $record->resolvedMetaTitle());
 
         return $field->Field() . $this->getErrorMessages();
     }
@@ -115,13 +116,13 @@ class SEOEditorMetaTitleColumn extends GridFieldDataColumns implements
     {
         $errors = [];
 
-        if (strlen($record->MetaTitle) < 10) {
+        if (strlen($record->resolvedMetaTitle()) < 10) {
             $errors[] = 'seo-editor-error-too-short';
         }
-        if (strlen($record->MetaTitle) > 55) {
+        if (strlen($record->resolvedMetaTitle()) > 55) {
             $errors[] = 'seo-editor-error-too-long';
         }
-        if (strlen(SiteTree::get()->filter('MetaTitle', $record->MetaTitle)->count() > 1)) {
+        if ($record->MetaTitle && SiteTree::get()->filter('MetaTitle', $record->MetaTitle)->count() > 1) {
             $errors[] = 'seo-editor-error-duplicate';
         }
 

@@ -87,6 +87,7 @@ class SEOEditorMetaDescriptionColumn extends GridFieldDataColumns implements
         $field->setName($this->getFieldName($field->getName(), $gridField, $record));
         $field->setValue($value);
         $field->setAttribute('data-name', 'MetaDescription');
+        $field->setAttribute('placeholder', $record->resolvedMetaDescription());
 
         return $field->Field() . $this->getErrorMessages();
     }
@@ -116,13 +117,13 @@ class SEOEditorMetaDescriptionColumn extends GridFieldDataColumns implements
     {
         $errors = [];
 
-        if (strlen($record->MetaDescription) < 10) {
+        if (strlen($record->resolvedMetaDescription()) < 10) {
             $errors[] = 'seo-editor-error-too-short';
         }
-        if (strlen($record->MetaDescription) > 160) {
+        if (strlen($record->resolvedMetaDescription()) > 160) {
             $errors[] = 'seo-editor-error-too-long';
         }
-        if (strlen(SiteTree::get()->filter('MetaDescription', $record->MetaDescription)->count() > 1)) {
+        if ($record->MetaDescription && SiteTree::get()->filter('MetaDescription', $record->MetaDescription)->count() > 1) {
             $errors[] = 'seo-editor-error-duplicate';
         }
 
